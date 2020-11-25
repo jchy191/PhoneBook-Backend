@@ -54,18 +54,37 @@ app.post('/api/persons', (req, res, next) => {
     }
 
     const id = Math.floor(Math.random() * 1000);
-    const newPerson = new Contact({
+    const contact = new Contact({
         name: req.body.name,
         number: req.body.number,
         id: id,
     });
 
-    newPerson.save()
-        .then(contact => {
-            return res.status(201).json(contact);
+    contact.save()
+        .then(returnedContact => {
+            return res.status(201).json(returnedContact);
         })
         .catch(error => next(error))
 
+})
+
+app.put('/api/persons/:id', (req, res, next) => {
+
+    if(!req.body.name || !req.body.number) {
+        const err = new Error("Content missing");
+        err.status = 400;
+        return next(err);
+    }
+
+    const contact = {
+        number: req.body.number,
+    };
+
+    Contact.findByIdAndUpdate(req.params.id, contact, {new: true})
+        .then(updatedContact => {
+            res.status(201).json(updatedContact);
+        })
+        .catch(error => next(error))
 })
 
 app.delete('/api/persons/:id', (req, res, next) => {
@@ -76,6 +95,7 @@ app.delete('/api/persons/:id', (req, res, next) => {
         })
         .catch(error => next(error))
 })
+
 
 app.use((req, res) => {
     res.status(404).json({error: 'Unknown endpoint'})
