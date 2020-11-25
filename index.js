@@ -18,7 +18,11 @@ app.use(morgan(':body'));
 
 app.get('/info', (req, res) => {
     const date = new Date()
-    res.send(`<p>Phonebook has info for ${persons.length} people</p><p>${date}</p>`)
+    Contact.find({})
+        .count((err, count) => {
+            if (err) next(err)
+            res.send(`<p>Phonebook has info for ${count} person(s)</p><p>${date}</p>`)
+        })
 })
 
 app.get('/api/persons', (req, res, next) => {
