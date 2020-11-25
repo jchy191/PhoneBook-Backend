@@ -45,6 +45,22 @@ app.get('/api/persons/:id', (req, res) => {
     }
 })
 
+app.post('/api/persons', (req, res) => {
+
+    if(!req.body.name || !req.body.number) {
+        return res.status(400).json({error: 'Content missing.'})
+    }
+
+    const person = persons.find(person => person.name === req.body.name);
+    if (person) {
+        return res.status(400).json({error: 'Name already exists in phonebook.'})
+    }
+    const id = Math.floor(Math.random() * 1000);
+    const newPerson = {...req.body, id};
+    persons = [...persons, newPerson];
+    res.status(201).json(newPerson);
+})
+
 app.delete('/api/persons/:id', (req, res) => {
     const id = Number(req.params.id);
     const personToDelete = persons.find(person => person.id === id);
@@ -55,7 +71,6 @@ app.delete('/api/persons/:id', (req, res) => {
         res.status(404).end();
     }
 })
-
 
 
 const PORT = 3001;
