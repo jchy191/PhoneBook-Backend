@@ -2,4 +2,9 @@ GET http://localhost:3001/api/persons
 
 ###
 
-GET http://localhost:3001/api/persons/3
+GET http://localhost:3001/api/persons/5fbe18badcd83b461bbf6bde
+
+
+###
+//Test for cast error
+GET http://localhost:3001/api/persons/adffaefadfd
