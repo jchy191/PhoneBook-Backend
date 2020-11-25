@@ -1,6 +1,8 @@
 const express = require('express');
 const morgan = require('morgan');
 const cors = require('cors');
+const Contact = require('./models/contacts.js');
+const { response } = require('express');
 
 const app = express();
 
@@ -41,7 +43,13 @@ app.get('/info', (req, res) => {
 })
 
 app.get('/api/persons', (req, res) => {
-    res.status(200).json(persons);
+    Contact.find({})
+        .then(contacts => {
+            res.status(200).json(contacts);
+        })
+        .catch(error => (
+            console.log(error.message)
+        ))
 })
 
 app.get('/api/persons/:id', (req, res) => {
