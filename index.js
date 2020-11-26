@@ -51,12 +51,6 @@ app.get('/api/persons/:id', (req, res, next) => {
 
 app.post('/api/persons', (req, res, next) => {
 
-    if(!req.body.name || !req.body.number) {
-        const err = new Error("Content missing");
-        err.status = 400;
-        return next(err);
-    }
-
     const id = Math.floor(Math.random() * 1000);
     const contact = new Contact({
         name: req.body.name,
@@ -74,17 +68,11 @@ app.post('/api/persons', (req, res, next) => {
 
 app.put('/api/persons/:id', (req, res, next) => {
 
-    if(!req.body.name || !req.body.number) {
-        const err = new Error("Content missing");
-        err.status = 400;
-        return next(err);
-    }
-
     const contact = {
         number: req.body.number,
     };
 
-    Contact.findByIdAndUpdate(req.params.id, contact, {new: true})
+    Contact.findByIdAndUpdate(req.params.id, contact, {new: true, runValidators: true})
         .then(updatedContact => {
             res.status(201).json(updatedContact);
         })
@@ -107,6 +95,9 @@ app.use((req, res) => {
 
 app.use((err, req, res, next) => {
 console.error(err.message);
+if (err.name === 'ValidationError') {
+    err.status = 400;
+}
 res.status(err.status || 500).json({error: err.message});
 })
 
