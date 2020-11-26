@@ -8,8 +8,9 @@
     "dev": "nodemon index.js",
     "build:ui": "rm -rf build && cd ../Phonebook && npm run build --prod && cp -r build ../Phonebook-Backend",
     "deploy": "git push heroku HEAD:master",
-    "deploy:full": "npm run build:ui && git add . && git commit -m uibuild && npm run deploy",
-    "logs:prod": "heroku logs --tail"
+    "deploy:full": "npm run build:ui && npm run lint && git add . && git commit -m uibuild && npm run deploy",
+    "logs:prod": "heroku logs --tail",
+    "lint": "eslint ."
   },
   "repository": {
     "type": "git",
@@ -30,6 +31,7 @@
     "morgan": "^1.10.0"
   },
   "devDependencies": {
+    "eslint": "^7.14.0",
     "nodemon": "^2.0.6"
   }
 }
